@@ -1,13 +1,12 @@
-package com.example.simpleprojectroom.Interface;
+package com.example.simpleprojectroom.Models;
 
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.simpleprojectroom.Models.Person;
+import com.example.simpleprojectroom.Models.entity.Person;
 
 import java.util.List;
 

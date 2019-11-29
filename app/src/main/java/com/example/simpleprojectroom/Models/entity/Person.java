@@ -1,4 +1,4 @@
-package com.example.simpleprojectroom.Models;
+package com.example.simpleprojectroom.Models.entity;
 
 
 import androidx.room.ColumnInfo;

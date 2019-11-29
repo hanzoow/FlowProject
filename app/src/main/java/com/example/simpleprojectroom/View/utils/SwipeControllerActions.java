@@ -1,4 +1,4 @@
-package com.example.simpleprojectroom;
+package com.example.simpleprojectroom.View.utils;
 
 public  abstract class  SwipeControllerActions {
 

@@ -1,4 +1,4 @@
-package com.example.simpleprojectroom.View;
+package com.example.simpleprojectroom.View.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,27 +8,34 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.simpleprojectroom.Interface.PersonAdapterClickListener;
-//import com.example.simpleprojectroom.Interface.PersonAdapterLongClickToDelete;
-import com.example.simpleprojectroom.Models.Person;
-import com.example.simpleprojectroom.PersonDatabase;
+import com.example.simpleprojectroom.Models.PersonDatabase;
+import com.example.simpleprojectroom.Models.entity.Person;
+import com.example.simpleprojectroom.Presenter.SwipeIml;
+import com.example.simpleprojectroom.Presenter.impl.SwipePresenter;
 import com.example.simpleprojectroom.R;
-import com.example.simpleprojectroom.adapter.PersonAdapter;
+import com.example.simpleprojectroom.View.LoadPersonView;
+import com.example.simpleprojectroom.View.adapter.PersonAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+//import com.example.simpleprojectroom.Interface.PersonAdapterLongClickToDelete;
 
-public class MainActivity extends AppCompatActivity implements PersonAdapter.onLoadMoreListener, PersonAdapterClickListener {
+
+public class MainActivity extends AppCompatActivity implements PersonAdapter.onLoadMoreListener, PersonAdapterClickListener, LoadPersonView {
     RecyclerView.LayoutManager layoutManager;
     RecyclerView recyclerView;
     PersonAdapter myAdapter;
     //  RecyclerView.Adapter adapter;
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeIml presenter;
     FloatingActionButton fab;
     ImageView imDelete;
     List<Person> people;
@@ -40,14 +47,24 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//        presenter = new SwipePresenter(MainActivity.this, new SwipePresenter.loadPersonCallBack() {
+//            @Override
+//            public void onSuccess() {
+//
+//            }
+//
+//            @Override
+//            public void onFail() {
+//
+//            }
+//        });
 
-        imDelete = findViewById(R.id.imgDelete);
         recyclerView = findViewById(R.id.recycler_view);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateNewPerson.class));
+                startActivity(new Intent(MainActivity.this, CreateNewPersonActivity.class));
             }
         });
 //        SwipeController swipeController = new SwipeController();
@@ -56,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         PersonDatabase db = Room.databaseBuilder(getApplicationContext(), PersonDatabase.class, "person")
+                .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();
 
@@ -66,7 +84,13 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
         recyclerView.setAdapter(myAdapter);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.progressBar);
+        swipeRefreshLayout.setOnRefreshListener(listener);
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, android.R.color.holo_green_light)
+        );
 
     }
 //
@@ -77,6 +101,24 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
 //        db.personDao().deletePerson(position);
 //        myAdapter.notifyItemRemoved(position);
 //    }
+
+
+    private final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            presenter.loadPersonList(new SwipePresenter.LoadPersonCallBack() {
+                @Override
+                public void onSuccess(List<Person> persons) {
+                    myAdapter.updatePeopleData(persons);
+                }
+
+                @Override
+                public void onFail() {
+
+                }
+            });
+        }
+    };
 
     @Override
     public void onLoadMore() {
@@ -131,4 +173,20 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
     }
 
 
+    @Override
+    public void showProgress() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void hideProgress() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showPersonList(List<Person> people) {
+        if (!people.isEmpty()) {
+            myAdapter.setList(people);
+        }
+    }
 }

@@ -1,6 +1,7 @@
-package com.example.simpleprojectroom.adapter;
+package com.example.simpleprojectroom.View.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,15 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.simpleprojectroom.View.MainActivity;
 import com.example.simpleprojectroom.Interface.PersonAdapterClickListener;
-import com.example.simpleprojectroom.Models.Person;
+import com.example.simpleprojectroom.Models.entity.Person;
 import com.example.simpleprojectroom.R;
-import com.example.simpleprojectroom.adapter.ViewHolder.BusVH;
-import com.example.simpleprojectroom.adapter.ViewHolder.PlaneVH;
-import com.example.simpleprojectroom.adapter.ViewHolder.ViewHolderLoading;
+import com.example.simpleprojectroom.View.activities.MainActivity;
+import com.example.simpleprojectroom.View.adapter.ViewHolder.BusVH;
+import com.example.simpleprojectroom.View.adapter.ViewHolder.PlaneVH;
+import com.example.simpleprojectroom.View.adapter.ViewHolder.ViewHolderLoading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -27,7 +29,7 @@ public class PersonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //    private PersonAdapterLongClickToDelete personAdapterLongClickToDelete;
     MainActivity mainActivity = new MainActivity();
     private boolean isLoading;
-
+    private final List<Person> personList =new ArrayList<>();
     public PersonAdapterClickListener listener;
     List<Person> people;
     //Person person;
@@ -90,7 +92,12 @@ public class PersonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
     }
-
+    public void setList(List<Person> list){
+        personList.clear();
+        personList.addAll(list);
+        notifyDataSetChanged();
+        //Log.e(TAG, "onNext: "+movStrings.size() );
+    }
 
     @Override
     public int getItemViewType(int position) {

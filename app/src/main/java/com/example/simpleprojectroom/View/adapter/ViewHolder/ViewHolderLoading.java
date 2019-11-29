@@ -1,4 +1,4 @@
-package com.example.simpleprojectroom.adapter.ViewHolder;
+package com.example.simpleprojectroom.View.adapter.ViewHolder;
 
 
 import android.view.View;
