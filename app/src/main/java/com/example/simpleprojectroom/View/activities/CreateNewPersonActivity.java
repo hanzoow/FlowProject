@@ -1,5 +1,7 @@
 package com.example.simpleprojectroom.View.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +30,10 @@ public class CreateNewPersonActivity extends AppCompatActivity implements Create
     PersonAdapter myAdapter;
     Button btnAdd;
     List<Person> people;
+
+    public static void startActivity(Context context){
+        context.startActivity(new Intent(context, CreateNewPersonActivity.class));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

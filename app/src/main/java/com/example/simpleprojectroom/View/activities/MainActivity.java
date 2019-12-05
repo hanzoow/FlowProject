@@ -30,7 +30,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements PersonAdapter.onLoadMoreListener, PersonAdapterClickListener, LoadPersonView {
-    RecyclerView.LayoutManager layoutManager;
+   private RecyclerView.LayoutManager layoutManager;
     RecyclerView recyclerView;
     PersonAdapter myAdapter;
     //  RecyclerView.Adapter adapter;
@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
     FloatingActionButton fab;
     ImageView imDelete;
     List<Person> people;
+//todo private
+
 
 
     @Override
@@ -59,12 +61,12 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
 //            }
 //        });
 
-        recyclerView = findViewById(R.id.recycler_view);
-        fab = findViewById(R.id.fab);
+        recyclerView = findViewById(R.id.rvUser);
+        fab = findViewById(R.id.flAddUser);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateNewPersonActivity.class));
+                CreateNewPersonActivity.startActivity(MainActivity.this);
             }
         });
 //        SwipeController swipeController = new SwipeController();
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements PersonAdapter.onL
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
 
+        //todo move to model
         PersonDatabase db = Room.databaseBuilder(getApplicationContext(), PersonDatabase.class, "person")
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()

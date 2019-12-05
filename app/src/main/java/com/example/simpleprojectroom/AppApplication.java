@@ -9,13 +9,21 @@ import com.example.simpleprojectroom.Models.PersonDatabase;
 public class AppApplication extends Application {
     public static PersonDatabase roomDatabase;
 
+    private static AppApplication sInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        roomDatabase = Room.databaseBuilder(this, PersonDatabase.class, "person")
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
+        init(this);
     }
+
+    private static void init(AppApplication appApplication) {
+        sInstance = appApplication;
+    }
+
+    public static AppApplication getInstance() {
+        return sInstance;
+    }
+
 }
